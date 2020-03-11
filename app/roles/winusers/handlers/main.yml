@@ -1,0 +1,5 @@
+- name: restart dcv
+  win_service:
+    name: dcvserver
+    state: restarted
+

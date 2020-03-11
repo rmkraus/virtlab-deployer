@@ -1,0 +1,9 @@
+#!/usr/bin/ansible-playbook
+---
+- name: destroy
+  gather_facts: no
+  hosts: localhost
+
+  roles:
+    - name: infrastructure
+      infrastructure_action: destroy

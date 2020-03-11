@@ -1,0 +1,16 @@
+all:
+  children:
+
+    windows:
+      hosts:
+{% for idx in range(inventory_win_node_count | int) %}
+        user{{ idx }}:
+            ansible_host: user{{ idx }}.{{ inventory_lab_prefix }}.{{ inventory_domain }}
+{% endfor %}
+      vars:
+        ansible_user: Administrator
+        ansible_connection: winrm
+        ansible_become: no
+        ansible_password: {{ inventory_admin_password }}
+        ansible_winrm_transport: basic
+        ansible_winrm_server_cert_validation: ignore

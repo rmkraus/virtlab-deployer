@@ -1,0 +1,2 @@
+- name: wait for all hosts to become available
+  wait_for_connection:

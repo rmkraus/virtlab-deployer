@@ -1,0 +1,4 @@
+inventory_win_node_count: 1
+inventory_lab_prefix: virtlab
+inventory_domain: example.com
+inventory_admin_password: notapassword

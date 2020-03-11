@@ -1,0 +1,23 @@
+#!/usr/bin/ansible-playbook
+---
+- name: bootstrap
+  gather_facts: no
+  hosts: localhost
+
+  roles:
+    - name: infrastructure
+    - name: inventory
+      inventory_win_node_count: "{{ lookup('env', 'WIN_NODE_COUNT') }}"
+      inventory_lab_prefix: "{{ lookup('env', 'LAB_PREFIX') }}"
+      inventory_domain: "{{ lookup('env', 'AWS_R53_DOMAIN') }}"
+      inventory_admin_password: "{{ lookup('env', 'ADMIN_PASSWORD') }}"
+
+- name: configure windows hosts
+  gather_facts: no
+  hosts: windows
+
+  roles:
+    - name: available
+    - name: winusers
+      winusers_password: "{{ lookup('env', 'USER_PASSWORD') }}"
+

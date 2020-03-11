@@ -1,0 +1,10 @@
+- name: update inventory file
+  template:
+    src: inventory.j2
+    dest: /data/ansible/inventory
+  register: inv_update
+  tags:
+    - inventory
+
+- name: reload the inventory
+  meta: refresh_inventory

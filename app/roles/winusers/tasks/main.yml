@@ -1,0 +1,18 @@
+- name: create windows demo user
+  win_dsc:
+    resource_name: User
+    Ensure: Present
+    UserName: student
+    Password_password: "{{ winusers_password }}"
+    Password_username: student
+    PasswordChangeRequired: False
+    PasswordNeverExpires: True
+    PasswordChangeNotAllowed: True
+    FullName: Student Account
+
+- name: make demo user own dcv session
+  win_regedit:
+    path: HKU:\S-1-5-18\Software\GSettings\com\nicesoftware\dcv\session-management
+    name: owner
+    data: student
+  notify: restart dcv
