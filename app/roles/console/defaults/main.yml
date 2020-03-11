@@ -1,0 +1,5 @@
+console_user_pass: notapassword
+console_admin_pass: notapassword
+console_user_count: 1
+console_domain: virtlab.example.com
+console_secret_key: notapassword

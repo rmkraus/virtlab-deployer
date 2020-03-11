@@ -1,0 +1,22 @@
+#!/usr/bin/ansible-playbook
+---
+# -----------------------------------------------------------------------------
+
+- name: shutdown
+  gather_facts: no
+  hosts: localhost
+
+  tasks:
+    - name: read terraform db
+      set_fact:
+        tfdb: "{{ lookup('file', '/data/terraform.tfstate') | from_json }}"
+
+    - name: shutdown all instances
+      ec2:
+        instance_ids: "{{ item.1.attributes.id }}"
+        state: "stopped"
+        wait: False
+      loop: "{{ tfdb.resources | subelements('instances') }}"
+      loop_control:
+        label: "{{ item.0.type }}.{{ item.0.name }}.{{ item.1.index_key | default('0') }}"
+      when: item.0.type == "aws_instance"

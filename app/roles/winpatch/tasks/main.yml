@@ -1,0 +1,18 @@
+- name: perform an update
+  win_updates:
+    category_names:
+      - SecurityUpdates
+      - CriticalUpdates
+      - UpdateRollups
+      - Application
+      - Connectors
+      - DefinitionUpdates
+      - DeveloperKits
+      - FeaturePacks
+      - Guidance
+      - ServicePacks
+      - Tools
+      - UpdateRollups
+      - Updates
+    reboot: yes
+    state: installed

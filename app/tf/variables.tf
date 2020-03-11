@@ -4,6 +4,9 @@ variable aws_availability_zone {
 variable ami_id_win {
     type = string
 }
+variable ami_id_console {
+    type = string
+}
 variable app_instance_type {
     type = string
 }
@@ -17,5 +20,8 @@ variable lab_prefix {
     type = string
 }
 variable admin_password {
+    type = string
+}
+variable aws_key_name {
     type = string
 }

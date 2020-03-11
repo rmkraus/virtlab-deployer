@@ -1,0 +1,9 @@
+- name: patch the system
+  yum:
+    name: '*'
+    state: updated
+  register: patch
+
+- name: reboot the system
+  reboot:
+  when: patch is changed
