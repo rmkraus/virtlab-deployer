@@ -16,6 +16,7 @@
     owner: root
     group: root
     mode: 0755
+  notify: restart console
 
 - name: ensure the console is configured
   template:
@@ -24,6 +25,7 @@
     owner: "1000"
     group: "1000"
     mode: 0600
+  notify: restart console
 
 - name: create the console container
   command: podman create -d --name console -v /etc/console:/data:Z -p 80:8080 quay.io/rmkraus/virtlab-console:latest
@@ -31,9 +33,13 @@
     creates: /etc/systemd/system/console.service
 
 - name: create console service unit file
-  command: podman generate systemd --name console > /etc/systemd/system/console.service
-  args:
-    creates: /etc/systemd/system/console.service
+  command: podman generate systemd --name console
+  register: console_unit_file
+
+- name: save console unit file
+  copy:
+    dest: /etc/systemd/system/console.service
+    content: "{{ console_unit_file.stdout }}"
 
 - name: ensure console is running and enabled
   service:

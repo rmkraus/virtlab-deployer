@@ -32,6 +32,6 @@
     - name: console
       console_user_pass: "{{ lookup('env', 'USER_PASSWORD') }}"
       console_admin_pass: "{{ lookup('env', 'ADMIN_PASSWORD') }}"
-      console_domain: "{{ lookup('env', 'LAB_PREFIX') + lookup('env', 'AWS_R53_DOMAIN') }}"
+      console_domain: "{{ lookup('env', 'LAB_PREFIX') + '.' + lookup('env', 'AWS_R53_DOMAIN') }}"
       console_secret_key: "{{ lookup('env', 'ADMIN_PASSWORD') }}"
       console_user_count: "{{ lookup('env', 'WIN_NODE_COUNT') }}"

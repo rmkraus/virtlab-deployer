@@ -1,0 +1,4 @@
+- name: restart console
+  service:
+    name: console
+    state: restarted
