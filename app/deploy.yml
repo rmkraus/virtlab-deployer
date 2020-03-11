@@ -11,6 +11,12 @@
       inventory_lab_prefix: "{{ lookup('env', 'LAB_PREFIX') }}"
       inventory_domain: "{{ lookup('env', 'AWS_R53_DOMAIN') }}"
       inventory_admin_password: "{{ lookup('env', 'ADMIN_PASSWORD') }}"
+    - name: letsencrypt
+      letsencrypt_workdir: /data/letsencrypt
+      letsencrypt_fqdn: "*.{{ lookup('env', 'LAB_PREFIX') }}.{{ lookup('env', 'AWS_R53_DOMAIN') }}"
+      letsencrypt_email: "{{ lookup('env', 'ADMIN_EMAIL') }}"
+      letsencrypt_r53_zone: "{{ lookup('env', 'AWS_R53_DOMAIN') }}"
+
 
 - name: configure windows hosts
   gather_facts: no
@@ -20,6 +26,9 @@
     - name: available
     - name: winusers
       winusers_password: "{{ lookup('env', 'USER_PASSWORD') }}"
+    - name: dcvcert
+      dcvcert_key: /data/letsencrypt/privkey.pem
+      dcvcert_cert: /data/letsencrypt/cert.pem
     #- name: winpatch
 
 - name: configure console

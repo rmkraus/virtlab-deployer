@@ -1,0 +1,89 @@
+- name: ensure target directory exists
+  file:
+    path: "{{ letsencrypt_workdir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: save paths
+  set_fact:
+    privkey: "{{ letsencrypt_workdir }}/privkey.pem"
+    csr: "{{ letsencrypt_workdir }}/csr.pem"
+    cert: "{{ letsencrypt_workdir }}/cert.pem"
+    fullchain: "{{ letsencrypt_workdir }}/fullchain.pem"
+    chain: "{{ letsencrypt_workdir}}/chain.pem"
+    account_key: "{{ letsencrypt_workdir }}/account.key"
+
+- name: generate private key
+  openssl_privatekey:
+    path: "{{ privkey }}"
+    backup: yes
+
+- name: generate acme account key
+  openssl_privatekey:
+    path: "{{ account_key }}"
+    backup: yes
+
+- name: generate csr
+  openssl_csr:
+    path: "{{ csr }}"
+    privatekey_path: "{{ privkey }}"
+    backup: yes
+    common_name: "{{ letsencrypt_fqdn }}"
+    organization_name: "Red Hat"
+    organizational_unit_name: "NAPS"
+    email_address: "{{ letsencrypt_email }}"
+    country_name: "US"
+    state_or_province_name: "VA"
+    locality_name: "McLean"
+
+- name: create acme challenge
+  acme_certificate:
+    account_key_src: "{{ account_key }}"
+    acme_directory: "https://acme-v02.api.letsencrypt.org/directory"
+    acme_version: 2
+    terms_agreed: yes
+    src: "{{ csr }}"
+    dest: "{{ cert }}"
+    chain_dest: "{{ chain }}"
+    fullchain_dest: "{{ fullchain }}"
+    challenge: "dns-01"
+    remaining_days: 30
+    data: "{{ challenge | default(omit) }}"
+  register: challenge
+
+- name: create verification DNS record
+  route53:
+    state: present
+    zone: "{{ letsencrypt_r53_zone }}"
+    record: "{{ lookup('dict', challenge.challenge_data_dns).key }}"
+    type: TXT
+    ttl: 300
+    value: '"{{ lookup("dict", challenge.challenge_data_dns).value.0 }}"'
+    wait: yes
+  when: challenge is changed
+
+- name: check acme challenge
+  acme_certificate:
+    account_key_src: "{{ account_key }}"
+    acme_directory: "https://acme-v02.api.letsencrypt.org/directory"
+    acme_version: 2
+    src: "{{ csr }}"
+    dest: "{{ cert }}"
+    chain_dest: "{{ chain }}"
+    fullchain_dest: "{{ fullchain }}"
+    challenge: "dns-01"
+    remaining_days: 30
+    data: "{{ challenge | default(omit) }}"
+  when: challenge is changed
+
+- name: cleanup verification DNS record
+  route53:
+    state: absent
+    zone: "{{ letsencrypt_r53_zone }}"
+    record: "{{ lookup('dict', challenge.challenge_data_dns).key }}"
+    type: TXT
+    value: '"{{ lookup("dict", challenge.challenge_data_dns).value.0 }}"'
+    wait: yes
+  when: challenge is changed

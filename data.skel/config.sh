@@ -4,6 +4,7 @@ export ADMIN_PASSWORD='Admin$123'
 export USER_PASSWORD='Student$123'
 export WIN_NODE_COUNT=1
 export KEY_NAME=aws_key
+export ADMIN_EMAIL=dev@null.com
 
 # AWS CONFIGURATION
 export AWS_ACCESS_KEY_ID="ABCDEFG"

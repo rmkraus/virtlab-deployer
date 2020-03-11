@@ -1,0 +1,15 @@
+- name: copy cert and key to dcv server
+  win_copy:
+    backup: yes
+    src: "{{ item.src }}"
+    dest: "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\NICE\\dcv\\{{ item.dest }}"
+  loop:
+    - src: "{{ dcvcert_key }}"
+      dest: "dcv.key"
+      label: "private key"
+    - src: "{{ dcvcert_cert }}"
+      dest: "dcv.pem"
+      label: "certificate"
+  loop_control:
+    label: "{{ item.label }}"
+  notify: restart dcv

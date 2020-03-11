@@ -1,0 +1,4 @@
+letsencrypt_workdir: /tmp
+letsencrypt_fqdn: www.example.com
+letsencrypt_email: dev@null.com
+letsencrypt_r53_zone: example.com
