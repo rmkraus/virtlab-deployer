@@ -2,6 +2,7 @@
   terraform:
     project_path: "/app/tf/"
     state: present
+    targets: "{{ infrastructure_targets }}"
   when: infrastructure_action != 'destroy'
   tags:
     - terraform
@@ -11,6 +12,7 @@
   terraform:
     project_path: "/app/tf/"
     state: absent
+    targets: "{{ infrastructure_targets }}"
   when: infrastructure_action == 'destroy'
   tags:
     - terraform

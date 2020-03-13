@@ -1,1 +1,2 @@
 infrastructure_action: deploy
+infrastructure_targets: "{{ omit }}"
