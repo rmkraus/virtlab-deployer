@@ -1,0 +1,12 @@
+- name: stop student session
+  win_shell: |
+    $Session = ((quser student)[-1] -split("\s+"))[3]
+    logoff $Session
+  failed_when: False
+  listen: logout student
+
+- name: restart dcv
+  win_service:
+    name: dcvserver
+    state: restarted
+  listen: logout student

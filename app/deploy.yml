@@ -31,6 +31,9 @@
       dcvcert_cert: /data/letsencrypt/cert.pem
     - name: putty
       putty_ssh_shortcuts: "{{ lookup('env', 'SSH_SHORTCUTS') | from_json }}"
+    - name: links
+      links: "{{ lookup('env', 'WWW_SHORTCUTS') | from_json }}"
+    - name: firefox
     #- name: winpatch
 
 - name: configure console

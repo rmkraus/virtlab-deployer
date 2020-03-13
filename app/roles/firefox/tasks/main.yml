@@ -1,0 +1,48 @@
+- name: download firefox installer
+  win_get_url:
+    url: https://download.mozilla.org/?product=firefox-stub&os=win64&lang=en-US
+    dest: "C:\\firefox_installer.exe"
+  become: yes
+  become_user: student
+  tags:
+    - firefox
+
+- name: install firefox
+  win_package:
+    path: "C:\\firefox_installer.exe"
+    product_id: 'Mozilla Firefox'
+    creates_path: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+    state: present
+  tags:
+    - firefox
+
+- name: remove default icon for firefox
+  win_shortcut:
+    dest: 'C:\\Users\\Public\\Desktop\\Firefox.lnk'
+    state: absent
+  tags:
+    - firefox
+
+- name: create script to set default browser
+  win_copy:
+    content: |
+      Set-ExecutionPolicy Unrestricted CurrentUser
+      Add-Type -AssemblyName 'System.Windows.Forms'
+      $FFName = (Get-ItemProperty -path hklm:\SOFTWARE\RegisteredApplications | Select-Object "Firefox*" | Get-Member | Select-Object -expand Name)[-1]
+      $CPArgs = '/name Microsoft.DefaultPrograms /page pageDefaultProgram\pageAdvancedSettings?pszAppName=' + $FFName
+      $CPanel = Start-Process $env:windir\system32\control.exe -ArgumentList $CPArgs
+      Sleep 5
+      [System.Windows.Forms.SendKeys]::SendWait("{TAB} {TAB}{TAB} ")
+    dest: "C:\\SetDefaultBrowser.ps1"
+  notify: logout student
+  tags:
+    - firefox
+
+- name: set default browser on session startup
+  win_shortcut:
+    src: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+    arguments: "-Command C:\\SetDefaultBrowser.ps1"
+    dest: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SetDefaultBrowser.lnk"
+  notify: logout student
+  tags:
+    - firefox

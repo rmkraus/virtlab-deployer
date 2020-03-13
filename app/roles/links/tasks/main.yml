@@ -1,0 +1,32 @@
+- name: create web shortcut templates
+  set_fact:
+    src: "{{ item.url }}"
+    dest: "C:\\Users\\Public\\Desktop\\{{ item.name }}.url"
+    desc: "{{ item.desc }}"
+  loop: "{{ links }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: links_templates
+  tags:
+    - links
+
+- name: create web shortcuts
+  win_shortcut:
+    src: '{{ item.ansible_facts.src | regex_replace("{{\s*student_number\s*}}", student_number|string) }}'
+    dest: '{{ item.ansible_facts.dest | regex_replace("{{\s*student_number\s*}}", student_number|string) }}'
+    description: '{{ item.ansible_facts.desc | regex_replace("{{\s*student_number\s*}}", student_number|string) }}'
+  loop: "{{ links_templates.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  tags:
+    - links
+
+- name: remove default AWS links
+  win_shortcut:
+    dest: "{{ item }}"
+    state: absent
+  loop:
+    - "C:\\Users\\Default\\Desktop\\EC2 Feedback.website"
+    - "C:\\Users\\Default\\Desktop\\EC2 Microsoft Windows Guide.website"
+  tags:
+    - links
