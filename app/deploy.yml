@@ -29,6 +29,8 @@
     - name: dcvcert
       dcvcert_key: /data/letsencrypt/privkey.pem
       dcvcert_cert: /data/letsencrypt/cert.pem
+    - name: putty
+      putty_ssh_shortcuts: "{{ lookup('env', 'SSH_SHORTCUTS') | from_json }}"
     #- name: winpatch
 
 - name: configure console
@@ -44,3 +46,5 @@
       console_domain: "{{ lookup('env', 'LAB_PREFIX') + '.' + lookup('env', 'AWS_R53_DOMAIN') }}"
       console_secret_key: "{{ lookup('env', 'ADMIN_PASSWORD') }}"
       console_user_count: "{{ lookup('env', 'WIN_NODE_COUNT') }}"
+      console_ssl_cert: /data/letsencrypt/cert.pem
+      console_ssl_key: /data/letsencrypt/privkey.pem

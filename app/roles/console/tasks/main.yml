@@ -27,8 +27,23 @@
     mode: 0600
   notify: restart console
 
+- name: ensure ssl certs are loaded
+  copy:
+    src: "{{ item.src }}"
+    dest: "/etc/console/{{ item.dest }}"
+    owner: 1000
+    group: 1000
+    mode: 0600
+  loop:
+    - src: "{{ console_ssl_cert }}"
+      dest: "cert.pem"
+    - src: "{{ console_ssl_key }}"
+      dest: "privkey.pem"
+  loop_control:
+    label: "{{ item.dest }}"
+
 - name: create the console container
-  command: podman create -d --name console -v /etc/console:/data:Z -p 80:8080 quay.io/rmkraus/virtlab-console:latest
+  command: podman create -d --name console -v /etc/console:/data:Z -p 80:8080 -p 443:8443 quay.io/rmkraus/virtlab-console:latest
   args:
     creates: /etc/systemd/system/console.service
 

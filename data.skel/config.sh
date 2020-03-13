@@ -1,4 +1,4 @@
-# PROJECT CONFIGURATION
+# LAB CONFIGURATION
 export LAB_PREFIX="virtlab"
 export ADMIN_PASSWORD='Admin$123'
 export USER_PASSWORD='Student$123'
@@ -13,6 +13,10 @@ export AWS_DEFAULT_REGION="us-east-1"
 export AWS_AVAILABILITY_ZONE="us-east-1a"
 export AWS_R53_ZONE_ID="ABCDEFG12345"
 export AWS_R53_DOMAIN="example.com"
+
+# LAB CUSTOMIZATION
+export SSH_SHORTCUTS='[{"name": "Your Server", "user": "student{{ student_number }}", "host": "student{{ student_number }}.example.com", "password": "NotAPassword"}]'
+export WWW_SHORTCUTS='[{"name": "Google", "desc": "Advertising company that makes a search engine", "url": "https://www.google.com"}]'
 
 ###############################################################################
 ###### DO NOT CHANGE ANYTHING BELOW THIS LINE #################################

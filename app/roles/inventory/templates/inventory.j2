@@ -12,6 +12,7 @@ all:
 {% for idx in range(inventory_win_node_count | int) %}
         user{{ idx }}:
             ansible_host: user{{ idx }}.{{ inventory_lab_prefix }}.{{ inventory_domain }}
+            student_number: {{ idx }}
 {% endfor %}
       vars:
         ansible_user: Administrator

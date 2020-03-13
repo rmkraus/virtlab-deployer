@@ -1,0 +1,26 @@
+- name: download putty
+  win_get_url:
+    url: https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe
+    dest: "C:\\putty.exe"
+
+- name: create ssh shortcut templates
+  set_fact:
+    args: '{{ item.user }}@{{ item.host }} -pw "{{ item.password }}"'
+    dest: 'C:\\Users\\Public\\Desktop\\{{ item.name }}.lnk'
+  loop: "{{ putty_ssh_shortcuts }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: putty_templates
+  tags:
+    - putty
+
+- name: create putty shortcuts
+  win_shortcut:
+    src: "C:\\putty.exe"
+    args: '{{ item.ansible_facts.args   | regex_replace("{{\s*student_number\s*}}", student_number|string) }}'
+    dest: '{{ item.ansible_facts.dest | regex_replace("{{\s*student_number\s*}}", student_number|string) }}'
+  loop: "{{ putty_templates.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  tags:
+    - putty
