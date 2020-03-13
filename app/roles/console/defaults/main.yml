@@ -5,3 +5,4 @@ console_domain: virtlab.example.com
 console_secret_key: notapassword
 console_ssl_cert: ""
 console_ssl_key: ""
+console_links: []

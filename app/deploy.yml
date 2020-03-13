@@ -51,3 +51,4 @@
       console_user_count: "{{ lookup('env', 'WIN_NODE_COUNT') }}"
       console_ssl_cert: /data/letsencrypt/cert.pem
       console_ssl_key: /data/letsencrypt/privkey.pem
+      console_links: "{{ lookup('env', 'WWW_SHORTCUTS') | from_json }}"

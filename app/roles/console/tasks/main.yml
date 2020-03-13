@@ -18,6 +18,26 @@
     mode: 0755
   notify: restart console
 
+- name: parse web shortcut templates
+  set_fact:
+    url: '{{ item.url | regex_replace("{{\s*student_number\s*}}", "{{ index }}" ) }}'
+    name: '{{ item.name | regex_replace("{{\s*student_number\s*}}", "{{ index }}" ) }}'
+    desc: '{{ item.desc | regex_replace("{{\s*student_number\s*}}", "{{ index }}" ) }}'
+  loop: "{{ console_links }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: console_links_parsed
+
+- name: create console configuration
+  set_fact:
+    console_config:
+      USER_PASS: "{{ console_user_pass }}"
+      ADMIN_PASS: "{{ console_admin_pass }}"
+      USER_COUNT: "{{ console_user_count }}"
+      DOMAIN: "{{ console_domain }}"
+      SECRET_KEY: "{{ console_secret_key }}"
+      OTHER_RESOURCES: "{{ console_links_parsed | json_query('results[*].ansible_facts') }}"
+
 - name: ensure the console is configured
   template:
     dest: /etc/console/config.yml
@@ -31,9 +51,9 @@
   copy:
     src: "{{ item.src }}"
     dest: "/etc/console/{{ item.dest }}"
-    owner: 1000
-    group: 1000
-    mode: 0600
+    owner: "1000"
+    group: "1000"
+    mode: "0600"
   loop:
     - src: "{{ console_ssl_cert }}"
       dest: "cert.pem"
