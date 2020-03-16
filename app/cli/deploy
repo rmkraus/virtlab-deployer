@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /app
+/app/deploy.yml

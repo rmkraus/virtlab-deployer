@@ -1,0 +1,149 @@
+#!/bin/bash
+
+# APPLICATION OPTIONS
+CONFIG_DIR="$HOME/.config/virtlab"
+ENGINE=""
+IMAGE="quay.io/rmkraus/virtlab-deployer"
+VERSION="latest"
+CONTAINER="virtlab-deployer"
+CONTEXT="default"
+
+# DEBUG OPTIONS
+# set -x
+IMAGE="localhost/virtlab-deployer"
+VERSION="dev"
+
+
+function _bootstrap() {
+    # find container engine
+    ENGINE=$(which docker 2> /dev/null || which podman 2> /dev/null)
+    if [ x${ENGINE} == "x" ]; then
+        echo "No container engine found. Please install Podman or Docker." >&2
+        exit 1
+    fi
+
+    # ensure program is installed
+    if ! $ENGINE images $IMAGE | grep $VERSION &> /dev/null; then
+        echo "Installing $CONTAINER" >&2
+        update
+        echo "" >&2
+    fi
+
+    # ensure config directory exists
+    if [ -e $CONFIG_DIR/.active ]; then
+        CONTEXT=$(cat $CONFIG_DIR/.active)
+        if [ "x${CONTEXT}" == "x" ]; then
+            context default >&2
+        fi
+    else
+        echo "Creating skeleton configuration directory." >&2
+        mkdir -p $CONFIG_DIR
+        echo "default" > $CONFIG_DIR/.active
+        echo "" >&2
+    fi
+    _context_init >&2
+}
+
+
+function run() {
+    it=""
+    if [ "$1" == "-it" ]; then
+        it="-it"
+        shift
+    fi
+
+    $ENGINE run --rm $it \
+        --name "${CONTAINER}" \
+        -v "${CONFIG_DIR}/${CONTEXT}:/data:Z" \
+        ${IMAGE}:${VERSION} \
+        $@
+}
+
+
+function _context_init() {
+    if [ ! -e $CONFIG_DIR/$CONTEXT ]; then
+        echo "Initializing context: ${CONTEXT}"
+        mkdir -p $CONFIG_DIR/$CONTEXT
+        run ""
+        echo ""
+    fi
+}
+
+
+function context() {
+    if [ "$#" == "0" ]; then
+        ls ${CONFIG_DIR} | sed "s/^${CONTEXT}$/* ${CONTEXT}/g"
+        exit
+    fi
+
+    CONTEXT=$1; shift
+    echo "$CONTEXT" > $CONFIG_DIR/.active
+    _context_init
+}
+
+
+function update() {
+    $ENGINE pull $IMAGE:$VERSION
+}
+
+
+function _app_cmds() {
+    run ls -1 /app/cli
+}
+
+
+function main() {
+    # setup
+    _bootstrap || exit $!
+
+    # get requested command
+    if [ "$#" == "0" ]; then
+        cmd="help"
+    else
+        cmd="$1"; shift
+    fi
+
+    # script native commands
+    case "$cmd" in
+        "update")
+            update $@
+            exit $?
+            ;;
+        "context")
+            context $@
+            exit $?
+            ;;
+        "run")
+            run $@
+            exit $?
+            ;;
+        "shell")
+            run -it /bin/bash
+            exit $?
+            ;;
+        "help")
+            commands="$(_app_cmds)"
+
+            echo "Usage: $0 COMMAND ..." >&2
+            echo "" >&2
+            echo "Commands:" >&2
+            echo -e "update\ncontext\nrun\nshell\nhelp\n$commands" | \
+                sort | awk '{ print "    " $1}' >&2
+            exit 1
+            ;;
+    esac
+
+    # container commands
+    commands="$(_app_cmds)"
+    if echo "$commands" | grep "^$cmd$" &>/dev/null; then
+        run -it /app/cli/$cmd $@
+        exit $?
+    fi
+
+    # not found
+    echo "Command not found: $cmd" >&2
+    echo "$0 help -> for help" >&2
+    exit 1
+}
+
+main $@

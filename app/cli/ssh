@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd /app
+HOST="$1"
+
+if ansible-inventory --host $HOST &> /dev/null; then
+    /bin/bash /app/ssh.sh $HOST
+else
+    echo "Usage: rsh HOST"
+    echo ""
+    echo "Hosts:"
+    ansible-inventory --graph
+    exit 1
+fi
