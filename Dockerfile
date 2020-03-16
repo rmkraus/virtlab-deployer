@@ -1,20 +1,4 @@
-FROM docker.io/library/fedora:31
-
-ARG tfvers='0.12.23'
-
-# Install dependencies
-RUN dnf update -y && \
-    dnf install -y \
-        ansible \
-        bash \
-        less \
-        openssh \
-        openssh-clients \
-        unzip \
-        vim \
-        wget \
-        zip \
-        python3-boto
+FROM localhost/virtlab-deployer-base:latest
 
 # Setup environment
 COPY resources/motd /etc/motd
@@ -29,14 +13,6 @@ RUN echo '[ ! -z "$TERM" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bashrc && \
     chmod 600 /root/.ssh/config
 WORKDIR /app
 COPY app /app
-
-# Install Terraform
-RUN mkdir /tmp/tf && \
-    cd /tmp/tf && \
-    wget https://releases.hashicorp.com/terraform/${tfvers}/terraform_${tfvers}_linux_amd64.zip && \
-    unzip -qq terraform_${tfvers}_linux_amd64.zip && \
-    mv terraform /usr/local/bin && \
-    rm -rf /tmp/tf
 
 # Setup startup environment
 CMD /app/bin/entry.sh
