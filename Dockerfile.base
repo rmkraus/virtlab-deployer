@@ -14,7 +14,9 @@ RUN dnf update -y && \
         vim \
         wget \
         zip \
-        python3-boto
+        python3-boto \
+        pip && \
+    pip install pyinquirer==1.0.3
 
 # Install Terraform
 RUN mkdir /tmp/tf && \
