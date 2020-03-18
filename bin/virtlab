@@ -87,6 +87,11 @@ function update() {
 }
 
 
+function dir() {
+    echo "${CONFIG_DIR}/${CONTEXT}"
+}
+
+
 function _app_cmds() {
     run ls -1 /app/cli
 }
@@ -121,13 +126,17 @@ function main() {
             run -it /bin/bash
             exit $?
             ;;
+        "dir")
+            dir
+            exit $?
+            ;;
         "help")
             commands="$(_app_cmds)"
 
             echo "Usage: $0 COMMAND ..." >&2
             echo "" >&2
             echo "Commands:" >&2
-            echo -e "update\ncontext\nrun\nshell\nhelp\n$commands" | \
+            echo -e "update\ncontext\nrun\nshell\ndir\nhelp\n$commands" | \
                 sort | awk '{ print "    " $1}' >&2
             exit 1
             ;;
