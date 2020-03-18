@@ -3,7 +3,6 @@ export LAB_PREFIX="virtlab"
 export ADMIN_PASSWORD='Admin$123'
 export USER_PASSWORD='Student$123'
 export WIN_NODE_COUNT=1
-export KEY_NAME=aws_key
 export ADMIN_EMAIL=dev@null.com
 
 # AWS CONFIGURATION
@@ -35,4 +34,3 @@ export TF_VAR_aws_availability_zone=${AWS_AVAILABILITY_ZONE}
 export TF_VAR_aws_r53_zone_id=${AWS_R53_ZONE_ID}
 export TF_VAR_lab_prefix="${LAB_PREFIX}"
 export TF_VAR_admin_password="${ADMIN_PASSWORD}"
-export TF_VAR_aws_key_name="${KEY_NAME}"

@@ -22,6 +22,3 @@ variable lab_prefix {
 variable admin_password {
     type = string
 }
-variable aws_key_name {
-    type = string
-}

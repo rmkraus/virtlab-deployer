@@ -1,0 +1,7 @@
+- name: ensure ssh key pair has been created
+  command: |
+    /usr/bin/ssh-keygen -f /data/id_rsa -q -C "" -N ""
+  args:
+    creates: /data/id_rsa
+  tags:
+    - keypair

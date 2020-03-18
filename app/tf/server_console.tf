@@ -5,7 +5,7 @@ resource "aws_instance" "console" {
   subnet_id                 = aws_subnet.main.id
   vpc_security_group_ids    = [aws_security_group.main.id]
   availability_zone         = var.aws_availability_zone
-  key_name                  = var.aws_key_name
+  key_name                  = aws_key_pair.main.id
   depends_on                = [aws_subnet.main]
 
   tags = {
