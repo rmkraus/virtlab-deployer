@@ -91,6 +91,34 @@ function dir() {
     echo "${CONFIG_DIR}/${CONTEXT}"
 }
 
+function forget() {
+    if [ $# != 1 ]; then
+        echo "Usage: $0 forget CONTEXT"
+        exit 1
+    fi
+
+    target=$1
+    if [[ "$target" == "default" ]]; then
+        echo "Cannot forget default context"
+        exit 1
+    fi
+
+    echo "Forget and delete context \"$target\"."
+    echo -n "Are you sure [y/n]? "
+    read response
+
+    if [[ "$response" == "y" ]]; then
+        rm -rf "${CONFIG_DIR}/${target}"
+        if [[ "$CONTEXT" == "$target" ]]; then
+            context default
+        fi
+
+    elif [[ "$response" == "n" ]]; then
+        echo 'aborted'
+        exit 1
+    fi
+}
+
 
 function _app_cmds() {
     run ls -1 /app/cli
@@ -130,13 +158,17 @@ function main() {
             dir
             exit $?
             ;;
+        "forget")
+            forget $@
+            exit $?
+            ;;
         "help")
             commands="$(_app_cmds)"
 
             echo "Usage: $0 COMMAND ..." >&2
             echo "" >&2
             echo "Commands:" >&2
-            echo -e "update\ncontext\nrun\nshell\ndir\nhelp\n$commands" | \
+            echo -e "update\ncontext\nrun\nshell\ndir\nforget\nhelp\n$commands" | \
                 sort | awk '{ print "    " $1}' >&2
             exit 1
             ;;
