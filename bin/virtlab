@@ -9,9 +9,12 @@ CONTAINER="virtlab-deployer"
 CONTEXT="default"
 
 # DEBUG OPTIONS
-# set -x
-IMAGE="localhost/virtlab-deployer"
-VERSION="dev"
+if basename "$0" | grep '.dev$' &>/dev/null; then
+    echo 'DEVELOPMENT MODE'
+    # set -x
+    IMAGE="localhost/virtlab-deployer"
+    VERSION="dev"
+fi
 
 
 function _bootstrap() {
