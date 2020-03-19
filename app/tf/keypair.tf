@@ -3,6 +3,6 @@ data "local_file" "pub_key" {
 }
 
 resource "aws_key_pair" "main" {
-  key_name_prefix   = "${var.lab_prefix}"
-  public_key        = "${data.local_file.pub_key.content}"
+  key_name_prefix   = var.lab_prefix
+  public_key        = data.local_file.pub_key.content
 }

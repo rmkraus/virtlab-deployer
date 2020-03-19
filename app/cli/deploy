@@ -1,4 +1,19 @@
 #!/bin/bash
 
 cd /app
-/app/deploy.yml
+source /data/config.sh
+
+if /app/deploy.yml; then
+    fqdn=$(ansible-inventory --yaml --host console 2> /dev/null| grep ansible_host | awk -F': ' '{ print $2 }')
+    echo ""
+    echo " ##################################"
+    echo ""
+    echo "Deployment has finished"
+    echo "You can access the console at the following URL:"
+    echo "https://${fqdn}"
+    echo ""
+else
+    echo "There was an error deploying the cluster."
+    echo "Please check the logs to see the issue."
+    exit 1
+fi

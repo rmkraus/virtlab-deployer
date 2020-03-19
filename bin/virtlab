@@ -165,11 +165,19 @@ function main() {
         "help")
             commands="$(_app_cmds)"
 
-            echo "Usage: $0 COMMAND ..." >&2
-            echo "" >&2
-            echo "Commands:" >&2
-            echo -e "update\ncontext\nrun\nshell\ndir\nforget\nhelp\n$commands" | \
-                sort | awk '{ print "    " $1}' >&2
+            echo "Usage: $0 COMMAND ..."
+            echo ""
+            echo "Basic Commands:"
+            echo "    context [NAME]: Check current context, create a new context, or switch contexts."
+            echo "    dir: Print the current context storage directory"
+            echo "    forget CONTEXT: Forget and delete the specified context"
+            echo "    help: Print this text"
+            echo "    run CMD [ARGS]: Run a raw shell command in the application namespace"
+            echo "    shell: Start an interactive bash shell in the application namespace"
+            echo "    update: Update this application"
+            echo ""
+            echo "Application Commands:"
+            echo -e "$commands" | sort | awk '{ print "    " $1}'
             exit 1
             ;;
     esac

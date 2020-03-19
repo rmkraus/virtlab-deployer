@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd /app
+source /data/config.sh
 HOST="$1"
 
 if ansible-inventory --host $HOST &> /dev/null; then

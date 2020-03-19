@@ -59,8 +59,8 @@ class Parameter(object):
             {
                 'type': 'input',
                 'name': 'newval',
-                'message': param.prompt,
-                'default': param.value,
+                'message': self.prompt,
+                'default': self.value,
             }
         ]
         answer = prompt(question)
@@ -95,7 +95,7 @@ class ListDictParameter(Parameter):
             question = [
                 {
                     'type': 'expand',
-                    'message': 'What would you like to do?',
+                    'message': '{}: What would you like to do?'.format(self.prompt),
                     'name': 'action',
                     'default': 'a',
                     'choices': [

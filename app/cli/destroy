@@ -1,4 +1,5 @@
 #!/bin/bash
 
 cd /app
+source /data/config.sh
 /app/destroy.yml
