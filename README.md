@@ -18,8 +18,7 @@ pre-populate shorcuts on your user's desktops. These shorcuts can either be SSH
 links or web URLs.
 4) Enterprise firewall issues. All of the resources deployed by VirtLab are
 HTTPS encrypted with signed certificates that get generated when the cluster
-deployes. The console is hosted on port 443 and the remote desktop is over port
-8443. No need to accept unsiged certs. No need to open port 22. None of that.
+deployes. The console is hosted on port 443 and the remote desktop is over port 8443. No need to accept unsiged certs. No need to open port 22. None of that.
 
 ## Installing the Deployer
 
