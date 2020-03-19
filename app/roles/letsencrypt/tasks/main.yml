@@ -84,6 +84,7 @@
     zone: "{{ letsencrypt_r53_zone }}"
     record: "{{ lookup('dict', challenge.challenge_data_dns).key }}"
     type: TXT
+    ttl: 300
     value: '"{{ lookup("dict", challenge.challenge_data_dns).value.0 }}"'
     wait: yes
   when: challenge is changed
