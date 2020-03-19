@@ -11,6 +11,10 @@ resource "aws_instance" "console" {
   tags = {
     Name                    = "${var.lab_prefix}_console"
   }
+
+  lifecycle {
+    ignore_changes = [tags, user_data]
+  }
 }
 resource "aws_eip" "console" {
   instance                  = aws_instance.console.id

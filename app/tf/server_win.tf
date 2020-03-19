@@ -19,6 +19,10 @@ resource "aws_instance" "win" {
   tags = {
     Name                    = "${var.lab_prefix}_win_${count.index}"
   }
+
+  lifecycle {
+    ignore_changes = [tags, user_data]
+  }
 }
 resource "aws_eip" "win" {
   count                     = var.win_node_count
