@@ -12,6 +12,9 @@ if /app/deploy.yml; then
     echo "You can access the console at the following URL:"
     echo "https://${fqdn}"
     echo ""
+    echo "The admin password is: ${ADMIN_PASSWORD}"
+    echo "The user password is: ${USER_PASSWORD}"
+    echo ""
 else
     echo "There was an error deploying the cluster."
     echo "Please check the logs to see the issue."

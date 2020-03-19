@@ -47,10 +47,12 @@ all of the items.
 
 You will then be prompted for all of the configuration values.
 The Administrator Password must be sufficiently complext or the deployment will
-fail. I highly recomend using a random password generator. Environemnt
-numberings start at 0, but 0 is reserved for administrative use. Student number
-0 will never be given to a student. For this reason, you'll always want to
-create one additional Windows Workstation.
+fail. I highly recomend using a random password generator.
+It seems that 12 charecters is a good length. If the Windows servers fail to
+come up during deployment, the issue is likely the Admin password.
+Environemnt numberings start at 0, but 0 is reserved for administrative use.
+Student number 0 will never be given to a student. For this reason, you'll
+always want to create one additional Windows Workstation.
 
 
 When creating SSH Shortcuts and Web Shortcuts, you can use the variable
