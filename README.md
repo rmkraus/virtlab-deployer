@@ -1,7 +1,25 @@
 # VirtLab Deployer
 
+![virtlab
+logo](https://github.com/rmkraus/virtlab-console/blob/master/app/static/portal_logo.png?raw=true)
+
 This code creates virtual computer lab environments on AWS for the purposes of
-running remote workshops.
+running remote workshops. This project aims to solve the three hardest things
+about delivering remote workshops.
+
+1) Handing out student ID numbers. Easy in concept. Hard in practice. To solve
+this, the VirtLab console will hand out student ID's as students log in.
+2) Over the shoulder debugging. Possibly the most valuable thing about being in
+the same room is being able to look at the same screen. VirtLab spins up
+virtual desktops on AWS for your students to use. Administrators can then
+access these desktops to work collaboratively with a student having issues.
+3) Copy/Paste issues with web links and host names. With VirtLab, you can
+pre-populate shorcuts on your user's desktops. These shorcuts can either be SSH
+links or web URLs.
+4) Enterprise firewall issues. All of the resources deployed by VirtLab are
+HTTPS encrypted with signed certificates that get generated when the cluster
+deployes. The console is hosted on port 443 and the remote desktop is over port
+8443. No need to accept unsiged certs. No need to open port 22. None of that.
 
 ## Installing the Deployer
 
