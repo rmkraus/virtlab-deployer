@@ -6,7 +6,7 @@ resource "aws_instance" "console" {
   vpc_security_group_ids    = [aws_security_group.main.id]
   availability_zone         = var.aws_availability_zone
   key_name                  = aws_key_pair.main.id
-  depends_on                = [aws_subnet.main]
+  depends_on                = [aws_subnet.main, aws_security_group.main, aws_key_pair.main]
 
   tags = {
     Name                    = "${var.lab_prefix}_console"

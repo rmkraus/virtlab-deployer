@@ -6,7 +6,7 @@ resource "aws_instance" "win" {
   subnet_id                 = aws_subnet.main.id
   vpc_security_group_ids    = [aws_security_group.main.id]
   availability_zone         = var.aws_availability_zone
-  depends_on                = [aws_subnet.main]
+  depends_on                = [aws_subnet.main, aws_security_group.main]
 
   user_data                 = <<-EOT
   <powershell>
